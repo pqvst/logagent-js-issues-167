@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+
+  test:
+    build: .
+    environment:
+      - NODE_ENV=production
+      - LOGSENE_ENABLED=true
+      - LOGSENE_TOKEN=<INSERT_TOKEN_HERE>
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "10"
+    restart: always
+    depends_on:
+      - logagent
+
+  logagent:
+    image: sematext/logagent:latest
+    environment:
+      - REGION=EU
+      - LOGSENE_ENABLED_DEFAULT=false
+      - LOGSENE_TOKEN=placeholder
+      - LOGAGENT_ARGS=--verbose
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
